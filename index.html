@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="ja"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="元素ラボ">
+<meta name="theme-color" content="#f4f6f9">
+<title>元素ラボ</title><style>
+:root{--bg:#f4f6f9;--card:#fff;--ink:#1f2937;--sub:#6b7280;--line:#e2e6ec;--accent:#2563eb;--pro:#e74c3c;--neu:#94a3b8;--ele:#2563eb}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;background:var(--bg);color:var(--ink)}
+body{font-family:"Hiragino Sans","Hiragino Kaku Gothic ProN","Noto Sans JP",system-ui,sans-serif}
+button{font-family:inherit;color:inherit}
+#main{max-width:560px;margin:0 auto;padding:calc(env(safe-area-inset-top) + 12px) 16px calc(env(safe-area-inset-bottom) + 90px)}
+nav{position:fixed;left:0;right:0;bottom:0;background:#fff;border-top:1px solid var(--line);display:flex;padding-bottom:env(safe-area-inset-bottom);z-index:10}
+nav button{flex:1;border:none;background:none;padding:10px 0 12px;font-size:12px;font-weight:700;color:var(--sub)}
+nav button span{display:block;font-size:20px;margin-bottom:2px}
+nav button.on{color:var(--accent)}
+.bhead{display:flex;align-items:center;gap:14px}
+.bigsym{position:relative;width:72px;height:72px;border-radius:14px;background:var(--cc);color:#fff;font-size:34px;font-weight:800;display:flex;align-items:center;justify-content:center;flex:none}
+.bz{position:absolute;top:4px;left:7px;font-size:12px;font-weight:700}
+.bname{font-size:24px;font-weight:800}
+.bcat{font-size:13px;font-weight:700}
+.bcat small{display:block;color:var(--sub);font-weight:500;font-size:11px}
+.atomwrap{background:radial-gradient(circle at 50% 50%,#fff 0,#eef2f8 100%);border:1px solid var(--line);border-radius:16px;margin:12px 0 10px;padding:6px}
+.atom{width:100%;max-width:360px;display:block;margin:0 auto}
+.orb{fill:none;stroke:#c7d0dd;stroke-width:1.2}
+.orb.outer{stroke:#93a7c4;stroke-dasharray:3 3}
+.shl{font-size:8.5px;fill:#64748b;font-weight:800;text-anchor:middle;paint-order:stroke;stroke:#f4f7fb;stroke-width:3px}
+.pro{fill:var(--pro);stroke:#fff;stroke-width:.8}
+.neu{fill:var(--neu);stroke:#fff;stroke-width:.8}
+.nuc{fill:#fbe3e0;stroke:#e74c3c}
+.nt{font-size:10px;text-anchor:middle;fill:#7f1d1d;font-weight:700}
+.ele{fill:#93b4f5}
+.ele.val{fill:var(--ele)}
+.ele.pop{animation:pop .7s ease-out;transform-box:fill-box;transform-origin:center}
+@keyframes pop{0%{transform:scale(3);opacity:0}60%{transform:scale(1.4);opacity:1}100%{transform:scale(1)}}
+.atom{animation:fadein .35s}
+@keyframes fadein{from{opacity:.4}to{opacity:1}}
+.legend{display:flex;justify-content:center;gap:14px;font-size:12px;color:var(--sub);padding:2px 0 6px}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:4px;vertical-align:-1px}
+.legend i.pro{background:var(--pro)}.legend i.neu{background:var(--neu)}.legend i.ele{background:var(--ele)}
+.ctrl{display:flex;align-items:center;gap:10px}
+.big{width:56px;height:56px;border-radius:50%;border:none;font-size:30px;font-weight:800;color:#fff;flex:none}
+.big.plus{background:var(--accent)}.big.minus{background:#94a3b8}
+.big:disabled{opacity:.3}
+.cmid{flex:1}
+#zs{width:100%;accent-color:var(--accent)}
+.ztxt{text-align:center;font-size:12px;color:var(--sub)}
+.playrow{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:10px 0}
+.btn{border:1px solid var(--line);background:#fff;border-radius:10px;padding:10px;font-size:14px;font-weight:700}
+.btn.dark{background:var(--ink);color:#fff;border-color:var(--ink)}
+.btn.red{background:#fff1f0;border-color:#f5b5ae;color:#b91c1c}
+.btn.wide{display:block;width:100%;margin:10px 0}
+.msg{background:#eef4ff;border-left:4px solid var(--accent);border-radius:8px;padding:10px 12px;font-size:14px;line-height:1.75;margin-bottom:10px}
+.info{background:#fff;border:1px solid var(--line);border-radius:12px;padding:4px 12px}
+.row{display:flex;justify-content:space-between;gap:10px;padding:8px 0;border-bottom:1px solid var(--line);font-size:13.5px}
+.row:last-child{border-bottom:none}
+.row span{color:var(--sub);flex:none}
+.row b{text-align:right;font-weight:700}
+.row small{color:var(--sub);font-weight:500}
+.cfg{font-size:12px;font-weight:600;line-height:1.7}
+.cfg sup{font-size:9px}
+.ion{margin-top:10px;background:#fff8e6;border:1px solid #f3d38a;border-radius:10px;padding:10px 12px;font-size:13.5px;line-height:1.7}
+.note{margin-top:10px;background:#fff;border:1px dashed #cbd5e1;border-radius:10px;padding:10px 12px;font-size:13.5px;line-height:1.7}
+.where{font-size:12px;color:var(--sub);font-weight:700;margin:14px 0 6px}
+.ptable{display:grid;grid-template-columns:repeat(18,1fr);gap:2px}
+.ptable.mini{gap:1.5px}
+.pc{border:none;padding:0;border-radius:3px;background:color-mix(in srgb,var(--cc) 30%,#fff);aspect-ratio:1;display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1.05;overflow:hidden}
+.ptable.mini .pc{font-size:7px;font-weight:800;color:transparent;border-radius:2px}
+.ptable.mini .pc.cur{color:#fff}
+.pc.cur{background:var(--cc);color:#fff!important;outline:2px solid var(--ink);z-index:1;transform:scale(1.25)}
+.pgap{display:flex;align-items:center;justify-content:center;font-size:8px;color:var(--sub)}
+.tscroll{overflow-x:auto;margin:0 -16px;padding:0 16px 6px}
+.tscroll .ptable{min-width:720px}
+.tscroll .pc{aspect-ratio:auto;height:44px;border-radius:4px}
+.pz{font-size:8px;color:#475569}.ps{font-size:15px;font-weight:800}.pn{font-size:7.5px;color:#475569;white-space:nowrap}
+.tscroll .pc.cur .pz,.tscroll .pc.cur .pn{color:#fff}
+.ttl{font-size:20px;font-weight:800;margin:4px 0 10px}
+.ttl small{font-size:12px;color:var(--sub);font-weight:500;margin-left:6px}
+.legend2{display:flex;flex-wrap:wrap;gap:6px 12px;font-size:12px;margin-top:10px}
+.legend2 i{display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:4px;vertical-align:-2px}
+.foot{font-size:11.5px;color:var(--sub);line-height:1.7;margin-top:12px}
+.bar{font-size:13px;color:var(--sub);margin-bottom:10px}.bar b{color:var(--ink);font-size:16px}
+.sub{font-size:13px;font-weight:700;margin:6px 0}
+.mode{display:block;width:100%;text-align:left;background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px;margin-bottom:8px}
+.mt{font-weight:800;font-size:16px}.md{font-size:12px;color:var(--sub);margin-top:2px}
+.qhead{display:flex;align-items:center;gap:10px;font-weight:800;margin-bottom:8px}
+.qhead .n{margin-left:auto;font-size:13px;color:var(--sub);font-weight:600}
+.back{border:none;background:none;font-size:22px;padding:6px 10px 6px 0}
+.qtype{display:inline-block;font-size:11px;font-weight:800;color:#fff;background:var(--accent);border-radius:5px;padding:2px 8px;margin-bottom:8px}
+.qcard{background:#fff;border:1px solid var(--line);border-radius:14px;padding:22px 14px;text-align:center;font-size:16px;line-height:1.8;margin-bottom:12px}
+.qbig{font-size:30px;font-weight:800}
+.choices{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.ch{border:1.5px solid #cbd5e1;background:#fff;border-radius:12px;min-height:58px;font-size:16px;font-weight:700;padding:8px}
+.ch.right{background:#16a34a;border-color:#16a34a;color:#fff}
+.ch.bad{background:#fee2e2;border-color:#fca5a5;color:#991b1b;text-decoration:line-through}
+.fb{margin-top:12px;background:#ecfdf5;border-radius:10px;padding:10px 12px;font-size:14px;font-weight:700;line-height:1.7}
+.fb.ng{background:#fef2f2;color:#991b1b}
+.fbel{font-weight:500;color:var(--ink);font-size:13px;margin-top:4px}
+.fb small{display:block;font-weight:500;color:var(--sub)}
+.elbadge{display:inline-block;color:#fff;border-radius:4px;padding:0 5px;font-weight:800;font-size:12px}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+.center{text-align:center}.big{}
+.center .big{font-size:22px;font-weight:800;margin:30px 0 14px;width:auto;height:auto;color:var(--ink);background:none;border-radius:0}
+.back2{margin-top:0}
+#fx{position:fixed;inset:0;pointer-events:none;display:flex;align-items:center;justify-content:center;z-index:20}
+#fx .ok{font-size:150px;color:#16a34a;opacity:0;animation:ok .7s ease-out}
+@keyframes ok{0%{transform:scale(.4);opacity:0}30%{opacity:.85;transform:scale(1.05)}100%{opacity:0}}
+#dlg{position:fixed;inset:0;background:rgba(15,23,42,.45);display:none;align-items:center;justify-content:center;z-index:30;padding:24px}
+#dlg.on{display:flex}
+#dlg .box{background:#fff;border-radius:14px;padding:20px;max-width:320px;width:100%}
+#dlg .msg{background:none;border:none;padding:0;font-weight:700}
+#dlg .row{border:none;gap:10px}#dlg .row .btn{flex:1}
+</style></head>
+<body>
+<div id="main"></div>
+<nav><button data-tab="build"><span>⚛︎</span>原子をつくる</button><button data-tab="table"><span>▦</span>周期表</button><button data-tab="quiz"><span>？</span>クイズ</button></nav>
+<div id="fx"></div>
+<div id="dlg"><div class="box"><div class="msg"></div><div class="row"></div></div></div>
+<script>
+/* ====== 元素データ ======
+ [記号, 名前, 原子量（[ ]は放射性で代表的な質量数）, 代表的な原子の質量数（最も多い同位体／最も長寿命の同位体）] */
+const RAW_EL=`H,水素,1.008,1|He,ヘリウム,4.003,4|Li,リチウム,6.94,7|Be,ベリリウム,9.012,9|B,ホウ素,10.81,11|C,炭素,12.01,12|N,窒素,14.01,14|O,酸素,16.00,16|F,フッ素,19.00,19|Ne,ネオン,20.18,20|
+Na,ナトリウム,22.99,23|Mg,マグネシウム,24.31,24|Al,アルミニウム,26.98,27|Si,ケイ素,28.09,28|P,リン,30.97,31|S,硫黄,32.07,32|Cl,塩素,35.45,35|Ar,アルゴン,39.95,40|
+K,カリウム,39.10,39|Ca,カルシウム,40.08,40|Sc,スカンジウム,44.96,45|Ti,チタン,47.87,48|V,バナジウム,50.94,51|Cr,クロム,52.00,52|Mn,マンガン,54.94,55|Fe,鉄,55.85,56|Co,コバルト,58.93,59|Ni,ニッケル,58.69,58|Cu,銅,63.55,63|Zn,亜鉛,65.38,64|Ga,ガリウム,69.72,69|Ge,ゲルマニウム,72.63,74|As,ヒ素,74.92,75|Se,セレン,78.97,80|Br,臭素,79.90,79|Kr,クリプトン,83.80,84|
+Rb,ルビジウム,85.47,85|Sr,ストロンチウム,87.62,88|Y,イットリウム,88.91,89|Zr,ジルコニウム,91.22,90|Nb,ニオブ,92.91,93|Mo,モリブデン,95.95,98|Tc,テクネチウム,[98],98|Ru,ルテニウム,101.1,102|Rh,ロジウム,102.9,103|Pd,パラジウム,106.4,106|Ag,銀,107.9,107|Cd,カドミウム,112.4,114|In,インジウム,114.8,115|Sn,スズ,118.7,120|Sb,アンチモン,121.8,121|Te,テルル,127.6,130|I,ヨウ素,126.9,127|Xe,キセノン,131.3,132|
+Cs,セシウム,132.9,133|Ba,バリウム,137.3,138|La,ランタン,138.9,139|Ce,セリウム,140.1,140|Pr,プラセオジム,140.9,141|Nd,ネオジム,144.2,142|Pm,プロメチウム,[145],145|Sm,サマリウム,150.4,152|Eu,ユウロピウム,152.0,153|Gd,ガドリニウム,157.3,158|Tb,テルビウム,158.9,159|Dy,ジスプロシウム,162.5,164|Ho,ホルミウム,164.9,165|Er,エルビウム,167.3,166|Tm,ツリウム,168.9,169|Yb,イッテルビウム,173.0,174|Lu,ルテチウム,175.0,175|Hf,ハフニウム,178.5,180|Ta,タンタル,180.9,181|W,タングステン,183.8,184|Re,レニウム,186.2,187|Os,オスミウム,190.2,192|Ir,イリジウム,192.2,193|Pt,白金,195.1,195|Au,金,197.0,197|Hg,水銀,200.6,202|Tl,タリウム,204.4,205|Pb,鉛,207.2,208|Bi,ビスマス,209.0,209|Po,ポロニウム,[209],209|At,アスタチン,[210],210|Rn,ラドン,[222],222|
+Fr,フランシウム,[223],223|Ra,ラジウム,[226],226|Ac,アクチニウム,[227],227|Th,トリウム,232.0,232|Pa,プロトアクチニウム,231.0,231|U,ウラン,238.0,238|Np,ネプツニウム,[237],237|Pu,プルトニウム,[244],244|Am,アメリシウム,[243],243|Cm,キュリウム,[247],247|Bk,バークリウム,[247],247|Cf,カリホルニウム,[251],251|Es,アインスタイニウム,[252],252|Fm,フェルミウム,[257],257|Md,メンデレビウム,[258],258|No,ノーベリウム,[259],259|Lr,ローレンシウム,[262],262|Rf,ラザホージウム,[267],267|Db,ドブニウム,[268],268|Sg,シーボーギウム,[271],271|Bh,ボーリウム,[272],272|Hs,ハッシウム,[277],277|Mt,マイトネリウム,[276],276|Ds,ダームスタチウム,[281],281|Rg,レントゲニウム,[280],280|Cn,コペルニシウム,[285],285|Nh,ニホニウム,[278],278|Fl,フレロビウム,[289],289|Mc,モスコビウム,[289],289|Lv,リバモリウム,[293],293|Ts,テネシン,[293],293|Og,オガネソン,[294],294`;
+
+const NOTES={
+1:'宇宙でいちばん多い元素。水（H₂O）の成分で、太陽はおもに水素の核融合で輝いている。',
+2:'空気より軽く、風船や飛行船に使われる。宇宙で2番目に多い元素。',
+3:'いちばん軽い金属。スマートフォンなどのリチウムイオン電池に使われる。',
+4:'宝石のエメラルドの成分。軽くてかたい合金をつくる。',
+5:'ホウ酸として目の洗浄液や「ホウ酸だんご」に使われる。',
+6:'生き物の体をつくる主な元素。ダイヤモンドも鉛筆の芯（黒鉛）も炭素だけでできている。',
+7:'空気の約78%を占める。たんぱく質やDNAにも含まれる。',
+8:'空気の約21%を占める。地殻（地球の表面の岩石）でいちばん多い元素。',
+9:'すべての元素の中で最も反応しやすい。歯みがき粉やフライパンのコーティングに使われる。',
+10:'電圧をかけると赤く光り、ネオンサインに使われた。',
+11:'食塩（塩化ナトリウム）の成分。金属のナトリウムは水と激しく反応する。',
+12:'燃えると白く強く光る。豆腐をかためる「にがり」の主成分（塩化マグネシウム）。',
+13:'1円玉やアルミ缶の材料。地殻でいちばん多い金属。',
+14:'岩石や砂の主な成分。半導体としてコンピューターのチップに使われる。',
+15:'DNAや骨に含まれる。マッチ箱の側面の薬（赤リン）にも使われる。',
+16:'火山や温泉のそばで黄色い結晶として見られる。温泉の「卵のにおい」は硫黄の化合物（硫化水素）のにおい。',
+17:'水道水やプールの消毒に使われる。食塩の成分。',
+18:'空気の約1%を占める。反応しにくいので電球や溶接に使われる。',
+19:'野菜や果物に多く、体に欠かせない元素。肥料の三要素の一つ。',
+20:'骨や歯、貝がら、石灰岩の主な成分。',
+21:'ここから遷移元素が始まる。アルミニウムとの合金がスポーツ用品に使われる。',
+22:'軽くてさびにくく、メガネのフレームや人工の骨・関節に使われる。',
+24:'ステンレス鋼やめっきに使われ、さびを防ぐ。',
+26:'人類がいちばん多く使っている金属。血液のヘモグロビンにも含まれ、地球の中心（核）の主成分でもある。',
+27:'青い顔料（コバルトブルー）や電池に使われる。',
+28:'50円玉・100円玉に使われている（銅との合金）。',
+29:'電気をよく通し、電線に使われる。10円玉の主な成分。',
+30:'鉄に亜鉛をめっきしたトタンや、乾電池に使われる。',
+31:'融点が約30℃で、手のひらにのせると溶ける金属。',
+33:'毒性が強いことで知られる。半導体の材料にもなる。',
+35:'常温で液体の非金属はこの元素だけ。',
+36:'貴ガスの一つ。蛍光灯や電球の封入ガスに使われる。',
+38:'炎に入れると赤く光り、花火の赤色に使われる。',
+43:'人工的につくられた最初の元素（1937年）。安定な同位体がない。',
+47:'電気と熱を最もよく通す金属。',
+50:'鉄にスズをめっきしたブリキや、はんだに使われる。',
+53:'うがい薬に使われる。日本は世界有数のヨウ素の産出国。',
+54:'車のヘッドライトや、人工衛星のイオンエンジンの燃料に使われる。',
+55:'原子時計に使われ、「1秒」の長さはセシウム原子をもとに決められている。',
+56:'胃のレントゲン検査で飲む「バリウム」は硫酸バリウム。炎色反応は黄緑色。',
+57:'ランタノイドの始まり。この後の元素では、内側の殻に電子が入っていく。',
+60:'強力な磁石（ネオジム磁石）の材料で、モーターやスピーカーに使われる。',
+61:'ランタノイドで唯一、安定な同位体がない元素。',
+74:'金属の中で融点がいちばん高い（約3400℃）。電球のフィラメントに使われた。',
+78:'さびにくく、アクセサリーや自動車の排ガスをきれいにする触媒に使われる。',
+79:'さびることがなく、とても薄くのばして金箔にできる。',
+80:'常温で液体の金属はこの元素だけ。昔は体温計に使われていた。',
+82:'重くやわらかい金属。放射線をさえぎるのに使われる。',
+84:'キュリー夫妻が発見した放射性元素。マリー・キュリーの祖国ポーランドにちなむ名前。',
+86:'放射性の気体。ラドン温泉で知られる。',
+88:'キュリー夫妻が発見した放射性元素。暗い所で光る。',
+89:'アクチノイドの始まり。この後の元素はすべて放射性。',
+92:'原子力発電の燃料。天然にまとまった量で存在する元素の中で最も重い。',
+94:'原子炉の中でウランからつくられる。',
+99:'アインシュタインにちなむ名前。最初は水爆実験のちりの中から見つかった。',
+101:'周期表をつくったメンデレーエフにちなむ名前。',
+113:'理化学研究所の森田浩介さんらのチームが合成した、日本で発見・命名された初めての元素（2016年に命名）。',
+118:'現在知られている中で最も重い元素。周期表の第7周期はここで終わる。'};
+
+const IONS={1:'H⁺',3:'Li⁺',11:'Na⁺',19:'K⁺',37:'Rb⁺',55:'Cs⁺',4:'Be²⁺',12:'Mg²⁺',20:'Ca²⁺',38:'Sr²⁺',56:'Ba²⁺',13:'Al³⁺',7:'N³⁻',8:'O²⁻',16:'S²⁻',9:'F⁻',17:'Cl⁻',35:'Br⁻',53:'I⁻',
+ 26:'Fe²⁺・Fe³⁺',29:'Cu⁺・Cu²⁺',30:'Zn²⁺',47:'Ag⁺',50:'Sn²⁺・Sn⁴⁺',82:'Pb²⁺'};
+/* 典型元素で「電荷がひとつに決まる」イオン（クイズ用）：Z → 電荷 */
+const ION_Q={1:1,3:1,11:1,19:1,4:2,12:2,20:2,13:3,7:-3,8:-2,16:-2,9:-1,17:-1,35:-1,53:-1};
+const GAS=[1,2,7,8,9,10,17,18,36,54,86];
+const LIQUID=[35,80];
+const NONMETAL=[1,2,5,6,7,8,9,10,14,15,16,17,18,33,34,35,36,52,53,54,85,86];
+
+/* 電子配置の例外（マーデルングの規則からのずれ）：[軌道, 増減] */
+const EXC={24:[['4s',-1],['3d',1]],29:[['4s',-1],['3d',1]],41:[['5s',-1],['4d',1]],42:[['5s',-1],['4d',1]],44:[['5s',-1],['4d',1]],45:[['5s',-1],['4d',1]],46:[['5s',-2],['4d',2]],47:[['5s',-1],['4d',1]],
+ 57:[['4f',-1],['5d',1]],58:[['4f',-1],['5d',1]],64:[['4f',-1],['5d',1]],78:[['6s',-1],['5d',1]],79:[['6s',-1],['5d',1]],
+ 89:[['5f',-1],['6d',1]],90:[['5f',-2],['6d',2]],91:[['5f',-1],['6d',1]],92:[['5f',-1],['6d',1]],93:[['5f',-1],['6d',1]],96:[['5f',-1],['6d',1]],103:[['6d',-1],['7p',1]]};
+const ORDER=['1s','2s','2p','3s','3p','4s','3d','4p','5s','4d','5p','6s','4f','5d','6p','7s','5f','6d','7p'];
+const CAP={s:2,p:6,d:10,f:14};
+const SHELL='KLMNOPQ';
+
+function config(Z){
+ const c={};let left=Z;
+ for(const o of ORDER){if(!left)break;const n=Math.min(CAP[o[1]],left);c[o]=n;left-=n;}
+ (EXC[Z]||[]).forEach(([o,d])=>{c[o]=(c[o]||0)+d;if(!c[o])delete c[o];});
+ return c;
+}
+function shellsOf(Z){const c=config(Z),s=[0,0,0,0,0,0,0];Object.keys(c).forEach(o=>s[+o[0]-1]+=c[o]);while(s.length&&!s[s.length-1])s.pop();return s;}
+function configText(Z){const c=config(Z);return ORDER.filter(o=>c[o]).sort((a,b)=>a[0]-b[0]||'spdf'.indexOf(a[1])-'spdf'.indexOf(b[1])).map(o=>o+'<sup>'+c[o]+'</sup>').join(' ');}
+
+const PERIOD_END=[2,10,18,36,54,86,118];
+function periodOf(Z){return PERIOD_END.findIndex(e=>Z<=e)+1;}
+function groupOf(Z){
+ const p=periodOf(Z),start=p===1?1:PERIOD_END[p-2]+1,off=Z-start;
+ if(p===1)return Z===1?1:18;
+ if(p<=3)return off<2?off+1:off+11;
+ if(p<=5)return off+1;
+ if(off<2)return off+1;
+ if(off<=16)return 3;          // ランタノイド・アクチノイド（3族）
+ return off-13;
+}
+function isLan(Z){return Z>=57&&Z<=71;}
+function isAct(Z){return Z>=89&&Z<=103;}
+function catOf(Z){
+ const g=groupOf(Z);
+ if(Z===1)return 'h';
+ if(isLan(Z))return 'lan';
+ if(isAct(Z))return 'act';
+ if(g===1)return 'alk';
+ if(g===2)return 'ae';
+ if(g>=3&&g<=12)return 'tr';
+ if(g===17)return 'hal';
+ if(g===18)return 'nob';
+ return NONMETAL.includes(Z)?'nm':'met';
+}
+const CATS={h:['水素','#5d8aa8'],alk:['アルカリ金属','#e74c3c'],ae:['アルカリ土類金属','#e67e22'],tr:['遷移元素','#c9a227'],lan:['ランタノイド','#b5651d'],act:['アクチノイド','#a0522d'],met:['その他の金属（典型元素）','#7f8c8d'],nm:['非金属','#27ae60'],hal:['ハロゲン','#16a085'],nob:['貴ガス','#8e44ad']};
+
+const EL=RAW_EL.replace(/\s/g,'').split('|').map((s,i)=>{
+ const [sym,name,w,a]=s.split(',');const Z=i+1;
+ return {Z,sym,name,w,A:+a,N:+a-Z,period:periodOf(Z),group:groupOf(Z),cat:catOf(Z),
+  state:Z>=100?'不明':GAS.includes(Z)?'気体':LIQUID.includes(Z)?'液体':'固体',
+  metal:!NONMETAL.includes(Z)};
+});
+
+/* ====== 共通 ====== */
+const $=s=>document.querySelector(s);
+const NOBLE=[2,10,18,36,54,86,118];
+function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+function valence(e){if(e.cat==='nob')return 0;if(e.group===1||e.group===2)return e.group;if(e.group>=13)return e.group-10;return null;}
+function shellTxt(Z){return shellsOf(Z).map((n,i)=>SHELL[i]+n).join(' ');}
+function catName(c){return CATS[c][0];}
+const KEY='genso-lab-v1';
+let S={Z:1,weak:{},streak:0,best:0,seen:{}};
+try{const t=localStorage.getItem(KEY);if(t)S=Object.assign(S,JSON.parse(t));}catch(e){}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}}
+
+/* ====== 何が変わった？ ====== */
+function changeMsg(Z){
+ const e=EL[Z-1],s=shellsOf(Z),p=Z>1?shellsOf(Z-1):[],v=valence(e),out=[];
+ if(Z===1)return 'いちばん単純な原子。原子核に陽子が1個、そのまわりのK殻に電子が1個。';
+ if(Z===2)return 'K殻に2個目の電子が入り、K殻がいっぱいになった。とても安定していて、ほとんど反応しない（貴ガス）。';
+ out.push(`陽子が1個増えて${Z}個になり、別の元素「${e.name}」になった。電子も1個増えて${Z}個。`);
+ if(s.length>p.length)out.push(`内側の殻がいっぱいになったので、新しい<b>${SHELL[s.length-1]}殻</b>に電子が入り始めた。ここから<b>第${e.period}周期</b>。`);
+ if(EXC[Z])out.push('<b>例外</b>：順番どおりなら最外殻に入る電子が、内側の殻に移っている（その方が安定するため）。');
+ if(NOBLE.includes(Z))out.push(`最外殻の電子が8個になり、とても安定した。ほとんど反応しない<b>貴ガス</b>で、第${e.period}周期はここで終わり。`);
+ else if(e.cat==='alk')out.push('最外殻の電子は1個だけ。これを失いやすく、+1のイオンになりやすい<b>アルカリ金属</b>。');
+ else if(e.cat==='ae')out.push('最外殻の電子は2個。2個を失って+2のイオンになりやすい。');
+ else if(e.cat==='hal')out.push(`最外殻の電子は7個。あと1個で貴ガスと同じ形になるので、電子を1個受け取って−1のイオンになりやすい<b>ハロゲン</b>。`);
+ else if(e.cat==='lan')out.push('<b>ランタノイド</b>：新しい電子は、外から3番目の殻（4f）に入っていく。外側の電子の数がほとんど変わらないので、性質がとても似ている。');
+ else if(e.cat==='act')out.push('<b>アクチノイド</b>：新しい電子は、外から3番目の殻（5f）などに入っていく。すべて放射性の元素。');
+ else if(e.cat==='tr')out.push('<b>遷移元素</b>：新しい電子は最外殻ではなく、内側の殻（d軌道）に入っていく。最外殻の電子は1〜2個のままなので、となりどうしの元素の性質が似ている。');
+ else if(v!==null)out.push(`最外殻の電子（価電子）は${v}個（${e.group}族）。`);
+ if(Z>=104)out.push('<small>※この元素の電子配置は、ごく少量しかつくれないため理論による予想です。</small>');
+ return out.join('<br>');
+}
+
+/* ====== 原子の図（ボーアモデル） ====== */
+function atomSVG(Z,popLast){
+ const e=EL[Z-1],s=shellsOf(Z),c=150,rs=s.map((_,i)=>44+i*16);
+ let g=`<svg viewBox="0 0 300 300" class="atom" role="img" aria-label="${e.name}の原子模型">`;
+ rs.forEach((r,i)=>{g+=`<circle cx="${c}" cy="${c}" r="${r}" class="orb ${i===s.length-1?'outer':''}"/><text x="${c+r-1}" y="${c+3.5}" class="shl">${SHELL[i]}</text>`;});
+ // 原子核
+ const P=Z,N=e.N,tot=P+N;
+ if(tot<=60){
+  const pts=[];const R=Math.min(28,6+Math.sqrt(tot)*3.2);
+  for(let k=0;k<tot;k++){const a=k*2.39996,rr=R*Math.sqrt((k+0.5)/tot);pts.push([c+rr*Math.cos(a),c+rr*Math.sin(a)]);}
+  const kinds=[];let pp=P,nn=N;for(let k=0;k<tot;k++){if(pp&&(nn===0||k%2===0)){kinds.push('p');pp--;}else if(nn){kinds.push('n');nn--;}else{kinds.push('p');pp--;}}
+  const nr=tot<=12?5.5:tot<=30?4.6:3.9;
+  pts.forEach((q,k)=>{g+=`<circle cx="${q[0].toFixed(1)}" cy="${q[1].toFixed(1)}" r="${nr}" class="${kinds[k]==='p'?'pro':'neu'}"/>`;});
+ }else{
+  g+=`<circle cx="${c}" cy="${c}" r="30" class="nuc"/><text x="${c}" y="${c-3}" class="nt">陽子${P}</text><text x="${c}" y="${c+12}" class="nt">中性子${N}</text>`;
+ }
+ // 電子
+ let idx=0;
+ s.forEach((n,i)=>{const r=rs[i];for(let k=0;k<n;k++){const a=-Math.PI/2+k*2*Math.PI/n;idx++;
+  const last=popLast&&i===s.length-1&&k===n-1;
+  g+=`<circle cx="${(c+r*Math.cos(a)).toFixed(1)}" cy="${(c+r*Math.sin(a)).toFixed(1)}" r="${n>18?3.2:4.2}" class="ele ${i===s.length-1?'val':''} ${last?'pop':''}"/>`;}});
+ return g+'</svg>';
+}
+
+/* ====== 小さな周期表 ====== */
+function cellPos(e){
+ if(isLan(e.Z))return [9,e.Z-57+3];
+ if(isAct(e.Z))return [10,e.Z-89+3];
+ return [e.period,e.group];
+}
+function tableHTML(cur,mini){
+ let h=`<div class="ptable ${mini?'mini':''}">`;
+ EL.forEach(e=>{const [r,col]=cellPos(e);
+  h+=`<button class="pc c-${e.cat} ${e.Z===cur?'cur':''}" style="grid-row:${r+(r>=9?1:0)};grid-column:${col};--cc:${CATS[e.cat][1]}" data-z="${e.Z}" title="${e.name}">${mini?'':`<span class="pz">${e.Z}</span>`}<span class="ps">${e.sym}</span>${mini?'':`<span class="pn">${e.name}</span>`}</button>`;});
+ h+=`<div class="pgap" style="grid-row:6;grid-column:3">${mini?'':'<span>57-71</span>'}</div><div class="pgap" style="grid-row:7;grid-column:3">${mini?'':'<span>89-103</span>'}</div>`;
+ return h+'</div>';
+}
+
+/* ====== 画面切り替え ====== */
+let tab='build',playTimer=null;
+function setTab(t){tab=t;stopPlay();document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('on',b.dataset.tab===t));
+ if(t==='build')renderBuild();else if(t==='table')renderTable();else renderQuizHome();window.scrollTo(0,0);}
+document.querySelectorAll('nav button').forEach(b=>b.addEventListener('click',()=>setTab(b.dataset.tab)));
+
+/* ====== 組み立て ====== */
+function renderBuild(pop){
+ const Z=S.Z,e=EL[Z-1],v=valence(e),s=shellsOf(Z);
+ S.seen[Z]=1;save();
+ let h=`<div class="bhead"><div class="bigsym" style="--cc:${CATS[e.cat][1]}"><span class="bz">${Z}</span>${e.sym}</div><div><div class="bname">${e.name}</div><div class="bcat" style="color:${CATS[e.cat][1]}">${catName(e.cat)}${e.group===12?'<small>（12族は典型元素に分類する教科書もある）</small>':''}</div></div></div>`;
+ h+=`<div class="atomwrap">${atomSVG(Z,pop)}<div class="legend"><span><i class="pro"></i>陽子 ${Z}</span><span><i class="neu"></i>中性子 ${e.N}</span><span><i class="ele"></i>電子 ${Z}</span></div></div>`;
+ h+=`<div class="ctrl"><button class="big minus" data-act="dec" ${Z<=1?'disabled':''}>−</button><div class="cmid"><input type="range" id="zs" min="1" max="118" value="${Z}"><div class="ztxt">原子番号 ${Z} / 118</div></div><button class="big plus" data-act="inc" ${Z>=118?'disabled':''}>＋</button></div>`;
+ h+=`<div class="playrow"><button class="btn" data-act="play">${playTimer?'■ 止める':'▶ 1番から順に見る'}</button><button class="btn" data-act="tbl">周期表で選ぶ</button></div>`;
+ h+=`<div class="msg">${changeMsg(Z)}</div>`;
+ h+=`<div class="info">
+  <div class="row"><span>電子殻</span><b>${s.map((n,i)=>`${SHELL[i]}殻 ${n}`).join('　')}</b></div>
+  <div class="row"><span>電子配置</span><b class="cfg">${configText(Z)}</b></div>
+  <div class="row"><span>周期・族</span><b>第${e.period}周期・${e.group}族${isLan(Z)?'（ランタノイド）':isAct(Z)?'（アクチノイド）':''}</b></div>
+  <div class="row"><span>最外殻の電子</span><b>${s[s.length-1]}個${v!==null?`　（価電子 ${v}個）`:''}</b></div>
+  <div class="row"><span>原子量</span><b>${e.w}</b></div>
+  <div class="row"><span>中性子</span><b>${e.N}個 <small>（質量数${e.A}の原子の場合）</small></b></div>
+  <div class="row"><span>常温での状態</span><b>${e.state}${e.metal?'・金属':'・非金属'}</b></div>
+  ${IONS[Z]?`<div class="row"><span>なりやすいイオン</span><b>${IONS[Z]}</b></div>`:''}
+ </div>`;
+ if(ION_Q[Z]){const q=ION_Q[Z],nb=q>0?NOBLE.filter(n=>n<Z).pop():NOBLE.find(n=>n>Z);
+  h+=`<div class="ion">イオンになると：電子を${Math.abs(q)}個${q>0?'失って':'受け取って'} <b>${IONS[Z]}</b> に。${nb?`電子の数が${Z-q}個になり、貴ガスの<b>${EL[nb-1].name}</b>と同じ電子配置（${shellTxt(nb)}）になる。`:'原子核（陽子1個）だけになる。'}</div>`;}
+ if(NOTES[Z]) h+=`<div class="note"><b>豆知識</b>　${NOTES[Z]}</div>`;
+ else if(Z>=93) h+=`<div class="note"><b>豆知識</b>　天然にはほとんど存在せず、原子炉や加速器で人工的につくられた放射性元素。</div>`;
+ else if(Z>=84) h+=`<div class="note"><b>豆知識</b>　安定な同位体がない放射性元素。</div>`;
+ h+=`<div class="where">周期表のどこ？</div>${tableHTML(Z,true)}`;
+ h+=`<div class="foot">同じ元素でも中性子の数がちがう原子（同位体）があります。ここでは代表的な原子の中性子の数を示しています。</div>`;
+ $('#main').innerHTML=h;
+ $('#zs').addEventListener('input',ev=>{S.Z=+ev.target.value;renderBuild();});
+}
+function setZ(z,pop){S.Z=Math.max(1,Math.min(118,z));renderBuild(pop);}
+function stopPlay(){if(playTimer){clearInterval(playTimer);playTimer=null;}}
+function togglePlay(){
+ if(playTimer){stopPlay();renderBuild();return;}
+ if(S.Z>=118)S.Z=0;
+ S.Z=Math.max(0,S.Z-1);
+ playTimer=setInterval(()=>{if(S.Z>=118){stopPlay();renderBuild();return;}setZ(S.Z+1,true);},3000);
+ setZ(S.Z+1,true);
+}
+
+/* ====== 周期表 ====== */
+function renderTable(){
+ let h='<div class="ttl">周期表 <small>タップすると原子の模型へ</small></div><div class="tscroll">'+tableHTML(S.Z,false)+'</div>';
+ h+='<div class="legend2">'+Object.keys(CATS).map(k=>`<span><i style="background:${CATS[k][1]}"></i>${CATS[k][0]}</span>`).join('')+'</div>';
+ h+='<div class="foot">12族（亜鉛・カドミウム・水銀など）は、典型元素に分類する教科書もあります。104番以降の元素の性質はよくわかっていません。</div>';
+ $('#main').innerHTML=h;
+}
+
+/* ====== クイズ ====== */
+const RANGES=[{id:20,name:'1〜20番（中学・高校の基本）'},{id:36,name:'1〜36番（第4周期まで）'},{id:118,name:'1〜118番（すべて）'}];
+const QT={
+ sym2name:{name:'記号 → 名前',ok:e=>true},
+ name2sym:{name:'名前 → 記号',ok:e=>true},
+ z2name:{name:'原子番号 → 元素',ok:e=>true},
+ shell2name:{name:'電子殻 → 元素',ok:e=>e.Z<=20},
+ valence:{name:'価電子の数',ok:e=>e.Z<=20},
+ cat:{name:'元素の分類',ok:e=>!['lan','act'].includes(e.cat)||true},
+ ion:{name:'イオン',ok:e=>ION_Q[e.Z]!==undefined},
+ pos:{name:'周期・族 → 元素',ok:e=>!isLan(e.Z)&&!isAct(e.Z)}};
+function near(e,maxZ,n){const pool=EL.filter(x=>x.Z!==e.Z&&x.Z<=maxZ);const close=shuffle(pool.filter(x=>Math.abs(x.Z-e.Z)<=4||x.group===e.group));const far=shuffle(pool);return [...new Set(close.concat(far))].slice(0,n);}
+function supChg(q){const a=Math.abs(q),sign=q>0?'⁺':'⁻';return ['','','²','³'][a]+sign;}
+function makeQ(type,Z,maxZ){
+ const e=EL[Z-1],d=near(e,Math.max(maxZ,Z),3);
+ switch(type){
+ case 'sym2name':return{q:`<span class="qbig">${e.sym}</span><br>この元素の名前は？`,a:e.name,ch:[e.name,...d.map(x=>x.name)]};
+ case 'name2sym':return{q:`<span class="qbig">${e.name}</span><br>元素記号は？`,a:e.sym,ch:[e.sym,...d.map(x=>x.sym)]};
+ case 'z2name':return{q:`原子番号 <span class="qbig">${Z}</span> の元素は？`,a:`${e.name}（${e.sym}）`,ch:[e,...d].map(x=>`${x.name}（${x.sym}）`)};
+ case 'shell2name':return{q:`電子殻の電子の数が<br><span class="qbig">${shellTxt(Z)}</span><br>の元素は？`,a:e.name,ch:[e.name,...d.map(x=>x.name)]};
+ case 'valence':{const v=valence(e);const o=shuffle([0,1,2,3,4,5,6,7].filter(x=>x!==v)).slice(0,3);return{q:`<span class="qbig">${e.name}（${e.sym}）</span><br>価電子の数は？`,a:v+'個',ch:[v,...o].map(x=>x+'個'),hint:e.cat==='nob'?'貴ガスは安定していて反応しにくいので、価電子の数は0とする。':''};}
+ case 'cat':{const all=['アルカリ金属','アルカリ土類金属','遷移元素','ハロゲン','貴ガス','非金属','その他の金属（典型元素）','ランタノイド','アクチノイド','水素'];const a=catName(e.cat);const o=shuffle(all.filter(x=>x!==a&&x!=='水素')).slice(0,3);return{q:`<span class="qbig">${e.name}（${e.sym}）</span><br>どのなかま？`,a,ch:[a,...o]};}
+ case 'ion':{const q=ION_Q[Z];const o=[-3,-2,-1,1,2,3].filter(x=>x!==q).sort((a,b)=>Math.abs(a-q)-Math.abs(b-q)).slice(0,3);if(!o.includes(-q))o[2]=-q;const a=e.sym+supChg(q);return{q:`<span class="qbig">${e.name}（${e.sym}）</span><br>なりやすいイオンは？`,a,ch:[q,...o].map(x=>e.sym+supChg(x))};}
+ case 'pos':return{q:`<span class="qbig">第${e.period}周期・${e.group}族</span><br>の元素は？`,a:`${e.name}（${e.sym}）`,ch:[e,...EL.filter(x=>x.Z!==e.Z&&!isLan(x.Z)&&!isAct(x.Z)&&(x.period===e.period||x.group===e.group)&&x.Z<=Math.max(maxZ,Z)).sort(()=>Math.random()-.5).slice(0,3)].map(x=>`${x.name}（${x.sym}）`)};
+ }
+}
+let QZ=null;
+function renderQuizHome(){
+ const wc=Object.keys(S.weak).length;
+ let h=`<div class="ttl">クイズ</div><div class="bar">連続正解 <b>${S.streak}</b>（最高 ${S.best}）　苦手 <b>${wc}</b>問</div>`;
+ h+='<div class="sub">出題する範囲</div>';
+ RANGES.forEach(r=>{h+=`<button class="mode" data-act="qstart" data-r="${r.id}"><div class="mt">${r.name}</div><div class="md">いろいろな問題を10問</div></button>`;});
+ if(wc)h+=`<button class="btn red wide" data-act="qreview">苦手を復習する（${wc}問）</button>`;
+ h+='<div class="foot">間違えた問題は、その回の最後にもう一度出ます。苦手として記録され、3回続けて正解すると消えます。</div>';
+ $('#main').innerHTML=h;
+}
+function startQuiz(maxZ){
+ const items=[];const types=Object.keys(QT);let guard=0;
+ while(items.length<10&&guard++<500){const t=types[Math.floor(Math.random()*types.length)];const Z=1+Math.floor(Math.random()*maxZ);if(!QT[t].ok(EL[Z-1]))continue;
+  const id=t+':'+Z;if(items.some(x=>x.id===id))continue;items.push({id,t,Z});}
+ // 苦手を優先して混ぜる
+ const weak=shuffle(Object.keys(S.weak).filter(id=>+id.split(':')[1]<=maxZ)).slice(0,3);
+ weak.forEach((id,i)=>{if(!items.some(x=>x.id===id)){const [t,z]=id.split(':');items[i]={id,t,Z:+z};}});
+ QZ={maxZ,items:shuffle(items),idx:0,wrong:[],round:1,inter:false};prepQ();renderQ();
+}
+function startReview(){const items=shuffle(Object.keys(S.weak)).slice(0,10).map(id=>{const [t,z]=id.split(':');return{id,t,Z:+z};});QZ={maxZ:118,review:1,items,idx:0,wrong:[],round:1,inter:false};prepQ();renderQ();}
+function prepQ(){const it=QZ.items[QZ.idx];const q=makeQ(it.t,it.Z,QZ.maxZ);q.ch=shuffle([...new Set(q.ch)]);QZ.cur=Object.assign(q,{it,done:false,picked:null});}
+function renderQ(){
+ let h=`<div class="qhead"><button class="back" data-act="qquit">←</button><span>${QZ.review?'苦手の復習':'クイズ'}</span><span class="n">${QZ.round>1?'やり直し ':''}${QZ.idx+1} / ${QZ.items.length}</span></div>`;
+ if(QZ.inter){h+=`<div class="center"><div class="big">間違えた ${QZ.items.length} 問を<br>もう一度</div><button class="btn dark wide" data-act="qresume">始める</button></div>`;$('#main').innerHTML=h;return;}
+ const c=QZ.cur,e=EL[c.it.Z-1];
+ h+=`<div class="qtype">${QT[c.it.t].name}</div><div class="qcard">${c.q}</div><div class="choices">`;
+ c.ch.forEach((x,i)=>{let cl='ch';if(c.done){if(x===c.a)cl+=' right';else if(x===c.picked)cl+=' bad';}h+=`<button class="${cl}" data-act="qch" data-i="${i}" ${c.done?'disabled':''}>${x}</button>`;});
+ h+='</div>';
+ if(c.done){
+  h+=`<div class="fb ${c.picked===c.a?'':'ng'}">${c.picked===c.a?'○ 正解！':'✕ 正解は '+c.a}<div class="fbel"><span class="elbadge" style="background:${CATS[e.cat][1]}">${e.Z} ${e.sym}</span> ${e.name}・${catName(e.cat)}・第${e.period}周期 ${e.group}族・${shellTxt(e.Z)}</div>${c.hint?`<small>${c.hint}</small>`:''}</div>`;
+  h+=`<div class="row2"><button class="btn" data-act="qsee">模型で見る</button><button class="btn dark" data-act="qnext">次へ</button></div>`;
+ }
+ $('#main').innerHTML=h;
+}
+function chooseQ(i){
+ const c=QZ.cur;if(c.done)return;c.picked=c.ch[i];c.done=true;const id=c.it.id;
+ if(c.picked===c.a){S.streak++;if(S.streak>S.best)S.best=S.streak;if(QZ.round===1&&S.weak[id]!=null){S.weak[id]++;if(S.weak[id]>=3)delete S.weak[id];}flash();}
+ else{S.streak=0;S.weak[id]=0;QZ.wrong.push(c.it);}
+ save();renderQ();
+}
+function nextQ(){QZ.idx++;if(QZ.idx>=QZ.items.length){if(QZ.wrong.length){QZ.items=shuffle(QZ.wrong);QZ.wrong=[];QZ.idx=0;QZ.round++;QZ.inter=true;renderQ();return;}
+  $('#main').innerHTML=`<div class="center"><div class="big">全問正解！</div><p>連続正解 ${S.streak}</p><button class="btn dark wide" data-act="qhome">クイズのトップへ</button></div>`;QZ=null;return;}
+ prepQ();renderQ();}
+function flash(){const f=$('#fx');f.innerHTML='<div class="ok">○</div>';setTimeout(()=>f.innerHTML='',700);}
+
+/* ====== 確認ダイアログ ====== */
+function ask(msg,ok,fn){const d=$('#dlg');d.querySelector('.msg').innerHTML=msg;const r=d.querySelector('.row');r.innerHTML='';
+ const c=document.createElement('button');c.className='btn';c.textContent='続ける';c.onclick=()=>d.classList.remove('on');
+ const o=document.createElement('button');o.className='btn dark';o.textContent=ok;o.onclick=()=>{d.classList.remove('on');fn();};r.append(c,o);d.classList.add('on');}
+
+/* ====== 操作 ====== */
+$('#main').addEventListener('click',ev=>{
+ const pc=ev.target.closest('.pc');if(pc){stopPlay();S.Z=+pc.dataset.z;setTab('build');return;}
+ const b=ev.target.closest('[data-act]');if(!b||b.disabled)return;const a=b.dataset.act;
+ if(a==='inc'){stopPlay();setZ(S.Z+1,true);}
+ else if(a==='dec'){stopPlay();setZ(S.Z-1);}
+ else if(a==='play')togglePlay();
+ else if(a==='tbl')setTab('table');
+ else if(a==='qstart')startQuiz(+b.dataset.r);
+ else if(a==='qreview')startReview();
+ else if(a==='qch')chooseQ(+b.dataset.i);
+ else if(a==='qnext')nextQ();
+ else if(a==='qresume'){QZ.inter=false;prepQ();renderQ();}
+ else if(a==='qhome')renderQuizHome();
+ else if(a==='qquit')ask('クイズをやめますか？','やめる',()=>{QZ=null;renderQuizHome();});
+ else if(a==='qsee'){S.Z=QZ.cur.it.Z;const keep=QZ;setTab('build');$('#main').insertAdjacentHTML('afterbegin','<button class="btn wide back2" data-act="qback">← クイズに戻る</button>');window._keepQ=keep;}
+ else if(a==='qback'){QZ=window._keepQ;tab='quiz';document.querySelectorAll('nav button').forEach(x=>x.classList.toggle('on',x.dataset.tab==='quiz'));renderQ();}
+});
+setTab('build');
+
+</script></body></html>
